@@ -193,6 +193,7 @@ public class HomeActivity extends BaseNavigationActivity implements View.OnClick
         switch (viewPager.getCurrentItem())
         {
             case DAPP_BROWSER:
+                if (dappBrowserFragment == null) dappBrowserFragment = new DappBrowserFragment();
                 if (dappBrowserFragment.getUrlIsBookmark())
                 {
                     getMenuInflater().inflate(R.menu.menu_added, menu);
@@ -378,12 +379,12 @@ public class HomeActivity extends BaseNavigationActivity implements View.OnClick
         public Fragment getItem(int position) {
             switch (position) {
                 case DAPP_BROWSER:
-                    dappBrowserFragment = new DappBrowserFragment();
+                    if (dappBrowserFragment == null) dappBrowserFragment = new DappBrowserFragment();
                     return dappBrowserFragment;
                 case WALLET:
                     return new WalletFragment();
                 case SETTINGS:
-                    settingsFragment = new NewSettingsFragment();
+                    if (settingsFragment == null) settingsFragment = new NewSettingsFragment();
                     return settingsFragment;
                 case TRANSACTIONS:
                     return new TransactionsFragment();
@@ -492,6 +493,7 @@ public class HomeActivity extends BaseNavigationActivity implements View.OnClick
                         {
                             case RC_ASSET_EXTERNAL_WRITE_PERM:
                                 viewModel.loadExternalXMLContracts();
+                                if (settingsFragment == null) settingsFragment = new NewSettingsFragment();
                                 settingsFragment.refresh();
                                 break;
                             case RC_DOWNLOAD_EXTERNAL_WRITE_PERM:
