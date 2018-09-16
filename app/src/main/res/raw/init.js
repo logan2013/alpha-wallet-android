@@ -2,6 +2,7 @@
 const addressHex = "%1$s";
 const rpcURL = "%2$s";
 const chainID = "%3$s";
+const publicKey = "%4$s";
 
 function executeCallback (id, error, value) {
   Trust.executeCallback(id, error, value)
@@ -48,7 +49,8 @@ window.Trust.init(rpcURL, {
   }
 }, {
     address: addressHex,
-    networkVersion: chainID
+    networkVersion: chainID,
+    pubKey: publicKey
 })
 window.web3.setProvider = function () {
   console.debug('Trust Wallet - overrode web3.setProvider')
@@ -59,5 +61,8 @@ window.web3.version.getNetwork = function(cb) {
 }
 window.web3.eth.getCoinbase = function(cb) {
     return cb(null, addressHex)
+}
+window.web3.eth.getPublicKey = function(cb) {
+    return cb(null, publicKey)
 }
 window.web3.eth.defaultAccount = addressHex

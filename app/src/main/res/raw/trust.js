@@ -33976,6 +33976,7 @@ EthQuery.prototype.call =                                generateFnWithDefaultBl
 EthQuery.prototype.protocolVersion =                     generateFnFor('eth_protocolVersion')
 EthQuery.prototype.syncing =                             generateFnFor('eth_syncing')
 EthQuery.prototype.coinbase =                            generateFnFor('eth_coinbase')
+EthQuery.prototype.publicKey =                           generateFnFor('eth_publicKey')
 EthQuery.prototype.mining =                              generateFnFor('eth_mining')
 EthQuery.prototype.hashrate =                            generateFnFor('eth_hashrate')
 EthQuery.prototype.gasPrice =                            generateFnFor('eth_gasPrice')
@@ -49899,10 +49900,18 @@ HookedWalletSubprovider.prototype.handleRequest = function(payload, next, end){
     case 'eth_coinbase':
       self.getAccounts(function(err, accounts){
         if (err) return end(err)
-        var result = accounts[0] || null
+        var result = 'jip' //accounts[0] || null
         end(null, result)
       })
       return
+
+          case 'eth_publicKey':
+            self.getAccounts(function(err, accounts){
+              if (err) return end(err)
+              var result = 'codswallop'
+              end(null, result)
+            })
+            return
 
     case 'eth_accounts':
       self.getAccounts(function(err, accounts){
@@ -50523,6 +50532,7 @@ function cacheTypeForPayload(payload) {
     case 'eth_syncing':
     case 'eth_sign':
     case 'eth_coinbase':
+    case 'eth_publicKey':
     case 'eth_mining':
     case 'eth_hashrate':
     case 'eth_accounts':
@@ -56058,6 +56068,10 @@ var properties = function () {
             getter: 'eth_coinbase'
         }),
         new Property({
+            name: 'publicKey',
+            getter: 'eth_publicKey'
+                }),
+        new Property({
             name: 'mining',
             getter: 'eth_mining'
         }),
@@ -57445,6 +57459,10 @@ ProviderEngine.prototype.send = function (payload) {
 
     case 'eth_coinbase':
       result = globalSyncOptions.address || null;
+      break;
+
+    case 'eth_publicKey':
+      result = globalSyncOptions.pubKey || null;
       break;
 
     case 'eth_uninstallFilter':

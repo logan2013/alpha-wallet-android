@@ -143,10 +143,15 @@ public class DappBrowserFragment extends Fragment implements
                 .get(DappBrowserViewModel.class);
         viewModel.defaultNetwork().observe(this, this::onDefaultNetwork);
         viewModel.defaultWallet().observe(this, this::onDefaultWallet);
+        viewModel.keyObtained().observe(this, this::onKeyObtained);
     }
 
     private void onDefaultWallet(Wallet wallet) {
         this.wallet = wallet;
+    }
+
+    private void onKeyObtained(Boolean dummy)
+    {
         setupWeb3();
 
         // Default to last opened site
@@ -163,9 +168,14 @@ public class DappBrowserFragment extends Fragment implements
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
             WebView.setWebContentsDebuggingEnabled(BuildConfig.DEBUG);
         }
+
+        // get public key
+        String publicKey = viewModel.getPublicKey();
+
         web3.setChainId(1);
         web3.setRpcUrl(C.ETH_RPC_URL);
         web3.setWalletAddress(new Address(wallet.address));
+        web3.setPublicKey(publicKey);
 
         web3.setWebChromeClient(new WebChromeClient() {
             @Override
@@ -238,7 +248,8 @@ public class DappBrowserFragment extends Fragment implements
     }
 
     @Override
-    public void onSignPersonalMessage(Message<String> message) {
+    public void onSignPersonalMessage(Message<String> message)
+    {
         DAppFunction dAppFunction = new DAppFunction() {
             @Override
             public void DAppError(Throwable error, Message<String> message) {
@@ -351,7 +362,8 @@ public class DappBrowserFragment extends Fragment implements
         web3.onGetBalance(viewModel.getFormattedBalance(balance));
     }
 
-    public static String hexToUtf8(String hex) {
+    public static String hexToUtf8(String hex)
+    {
         hex = org.web3j.utils.Numeric.cleanHexPrefix(hex);
         ByteBuffer buff = ByteBuffer.allocate(hex.length() / 2);
         for (int i = 0; i < hex.length(); i += 2) {

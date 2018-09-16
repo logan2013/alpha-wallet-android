@@ -49,6 +49,7 @@ public class DappBrowserViewModel extends BaseViewModel {
     private final MutableLiveData<NetworkInfo> defaultNetwork = new MutableLiveData<>();
     private final MutableLiveData<Wallet> defaultWallet = new MutableLiveData<>();
     private final MutableLiveData<GasSettings> gasSettings = new MutableLiveData<>();
+    private final MutableLiveData<Boolean> keyObtained = new MutableLiveData<>();
 
     private final FindDefaultNetworkInteract findDefaultNetworkInteract;
     private final FindDefaultWalletInteract findDefaultWalletInteract;
@@ -59,6 +60,7 @@ public class DappBrowserViewModel extends BaseViewModel {
 
     private double ethToUsd = 0;
     private ArrayList<String> bookmarks;
+    private String publicKey = "";
 
     DappBrowserViewModel(
             FindDefaultNetworkInteract findDefaultNetworkInteract,
@@ -88,6 +90,9 @@ public class DappBrowserViewModel extends BaseViewModel {
     }
     public MutableLiveData<GasSettings> gasSettings() {
         return gasSettings;
+    }
+    public MutableLiveData<Boolean> keyObtained() {
+        return keyObtained;
     }
 
     public String getUSDValue(double eth)
@@ -159,6 +164,8 @@ public class DappBrowserViewModel extends BaseViewModel {
         {
             ethToUsd = Double.valueOf(ticker.price_usd);
         }
+
+        obtainPublicKey();
     }
 
     public Observable<Wallet> getWallet() {
@@ -401,5 +408,37 @@ public class DappBrowserViewModel extends BaseViewModel {
     {
         if (bookmarks.contains(url)) bookmarks.remove(url);
         writeBookmarks(context, bookmarks);
+    }
+
+    private void obtainPublicKey()
+    {
+        String testSigMsg = "obtain public key";
+        disposable = createTransactionInteract.sign(defaultWallet.getValue(), testSigMsg.getBytes())
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::setPublicKey, this::onError);
+    }
+
+    private void setPublicKey(byte[] bytes)
+    {
+        try
+        {
+            String testSigMsg = "obtain public key";
+            Sign.SignatureData testSig = sigFromByteArray(bytes);
+            BigInteger recoveredKey = Sign.signedMessageToKey(testSigMsg.getBytes(), testSig);
+            String addressString = Keys.getAddress(recoveredKey); //TODO: Remove - this is here for debug/testing
+            publicKey = Numeric.toHexStringWithPrefix(recoveredKey);// WithPrefixZeroPadded(recoveredKey, 64);
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+
+        keyObtained.postValue(true);
+    }
+
+    public String getPublicKey()
+    {
+        return publicKey;
     }
 }

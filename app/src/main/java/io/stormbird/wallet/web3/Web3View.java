@@ -111,6 +111,10 @@ public class Web3View extends WebView {
 //        return new WrapWebSettings(super.getSettings());
 //    }
 
+    public void setPublicKey(String publicKey)
+    {
+        jsInjectorClient.setPublicKey(publicKey);
+    }
 
     public void setWalletAddress(@NonNull Address address) {
         jsInjectorClient.setWalletAddress(address);
