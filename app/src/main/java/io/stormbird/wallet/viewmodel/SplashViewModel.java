@@ -50,6 +50,8 @@ public class SplashViewModel extends ViewModel {
     private MutableLiveData<Wallet[]> wallets = new MutableLiveData<>();
     private MutableLiveData<Wallet> createWallet = new MutableLiveData<>();
 
+    private Disposable updateCheck;
+
     SplashViewModel(FetchWalletsInteract fetchWalletsInteract,
                     EthereumNetworkRepositoryType networkRepository,
                     ImportWalletInteract importWalletInteract,
@@ -149,6 +151,7 @@ public class SplashViewModel extends ViewModel {
     //on wallet error ensure execution still continues and splash screen terminates
     private void onError(Throwable throwable) {
         wallets.postValue(new Wallet[0]);
+        if (updateCheck != null && !updateCheck.isDisposed()) updateCheck.dispose();
     }
 
     //on key error ensure contract check continues
@@ -234,7 +237,7 @@ public class SplashViewModel extends ViewModel {
 
     private void checkWebsiteAPKFileData(long currentInstallDate, final Context baseContext)
     {
-        Disposable d = getFileDataFromURL(ALPHAWALLET_FILE_URL).toObservable()
+        updateCheck = getFileDataFromURL(ALPHAWALLET_FILE_URL).toObservable()
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(result -> onUpdate(result, currentInstallDate, baseContext), this::onError);
@@ -268,6 +271,7 @@ public class SplashViewModel extends ViewModel {
 
     private void onUpdate(FileData data, long currentInstallDate, Context baseContext)
     {
+        updateCheck.dispose();
         //if needs update can we spring open a dialogue box from here?
         if (data.fileDate > currentInstallDate)
         {
