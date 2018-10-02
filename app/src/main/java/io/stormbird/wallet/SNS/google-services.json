@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "901271830103",
+    "firebase_url": "https://alphawalletandroid.firebaseio.com",
+    "project_id": "alphawalletandroid",
+    "storage_bucket": "alphawalletandroid.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901271830103:android:cdc677bfd7db03d8",
+        "android_client_info": {
+          "package_name": "io.stormbird.wallet.SNS"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901271830103-d895esrb0921h2hpqij29em8bq7i35uj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCJVlCSgqiqV3TyId3vdmaoz7iG3b1AfeI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

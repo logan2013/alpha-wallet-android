@@ -11,6 +11,9 @@
 *.swp
 *.swo
 
+# AWS
+SNSAwsCredentials.properties
+
 # Files for the Dalvik VM
 *.dex
 

@@ -51,17 +51,18 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+
     packagingOptions {
-        exclude 'META-INF/NOTICE' // will not include NOTICE file
-        exclude 'META-INF/LICENSE' // will not include LICENSE file
-        // as noted by @Vishnuvathsan you may also need to include
-        // variations on the file name. It depends on your dependencies.
-        // Some other common variations on notice and license file names
-        //exclude 'META-INF/notice'
-        //exclude 'META-INF/notice.txt'
-        //exclude 'META-INF/license'
-        //exclude 'META-INF/license.txt'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/LICENSE.txt'
+        exclude 'META-INF/license.txt'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/NOTICE.txt'
+        exclude 'META-INF/notice.txt'
+        exclude 'META-INF/ASL2.0'
     }
+
     lintOptions {
         abortOnError false
     }
@@ -88,7 +89,7 @@ dependencies {
     implementation project(":lib")
 
     // WARNING! WARNING!  WARNING!  WARNING!  WARNING!  WARNING!  WARNING!  WARNING!  
-    // WARNING!  Don't add depdency on Google Play Services without consulting
+    // WARNING!  Don't add dependency on Google Play Services without consulting
     // WARNING!  The Chinese marketing team.
     // WARNING!  Many Chinese Android phones kill any app that users google gms
     // WARNING!  on site, like immune systems cleansing infections.
@@ -97,6 +98,10 @@ dependencies {
     // Etherium client
     implementation "org.web3j:core:$project.web3jVersion"
     implementation "org.ethereum:geth:$project.gethVersion"
+    // https://mvnrepository.com/artifact/org.codehaus.jackson/jackson-mapper-asl
+    api group: 'org.codehaus.jackson', name: 'jackson-mapper-asl', version: '1.9.13'
+    // https://mvnrepository.com/artifact/com.amazonaws/aws-java-sdk
+    api group: 'com.amazonaws', name: 'aws-java-sdk-sns', version: '1.9.3'
 
     // Http client
     implementation "com.squareup.retrofit2:retrofit:$project.retrofitVersion"
@@ -116,6 +121,8 @@ dependencies {
     // Bar code scanning
     implementation 'com.journeyapps:zxing-android-embedded:3.6.0'
     implementation 'com.google.zxing:core:3.3.2'
+
+    implementation 'com.google.firebase:firebase-core:16.0.1'
 
     // Sugar
     implementation 'com.android.support.constraint:constraint-layout:1.1.0'
@@ -148,14 +155,6 @@ dependencies {
     androidTestImplementation('tools.fastlane:screengrab:1.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
-    // Fabric
-//    implementation('com.crashlytics.sdk.android:crashlytics:2.8.0@aar') {
-//        transitive = true
-//    }
-//    implementation('com.crashlytics.sdk.android:answers:1.4.1@aar') {
-//        transitive = true
-//    }
 
     // PW
     implementation fileTree(include: ['*.jar'], dir: 'libs')
